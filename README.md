@@ -160,7 +160,7 @@ Potential features to demonstrate additional capabilities:
 
 ## 👤 Author
 
-**[Your Name]**
+**Ivyn San Pedro**
 - GitHub: [@ivynsanpedro](https://github.com/ivynsanpedro)
 - LinkedIn: [Ivyn San Pedro](https://www.linkedin.com/in/ivynsanpedro/)
 
