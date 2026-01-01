@@ -20,9 +20,6 @@
             color: #F8FAFC;
             overflow: hidden;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #canvas-container {
@@ -32,21 +29,39 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            cursor: pointer;
         }
 
         #ui-overlay {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 2rem;
-            max-width: 600px;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #top-bar {
+            position: absolute;
+            top: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 2rem;
+            pointer-events: none;
+        }
+
+        .title-section {
+            text-align: left;
         }
 
         h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
             background: linear-gradient(135deg, #06B6D4 0%, #10B981 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -55,120 +70,159 @@
         }
 
         .instruction {
-            font-size: 1.25rem;
+            font-size: 1rem;
             color: #CBD5E1;
-            margin-bottom: 2rem;
-            line-height: 1.6;
+            max-width: 400px;
         }
 
-        #game-area {
-            background: rgba(30, 41, 59, 0.6);
+        #score-panel {
+            background: rgba(30, 41, 59, 0.9);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(6, 182, 212, 0.2);
-            border-radius: 1.5rem;
-            padding: 3rem 2rem;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            min-width: 200px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease;
         }
 
-        #game-area:hover {
-            border-color: rgba(6, 182, 212, 0.4);
-            transform: translateY(-2px);
+        #score-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        #game-area.waiting {
-            border-color: rgba(251, 191, 36, 0.3);
-            background: rgba(30, 41, 59, 0.8);
-        }
-
-        #game-area.ready {
-            border-color: rgba(16, 185, 129, 0.6);
-            background: rgba(16, 185, 129, 0.1);
-            animation: pulse 0.5s ease-in-out;
-        }
-
-        #game-area.early {
-            border-color: rgba(239, 68, 68, 0.6);
-            background: rgba(239, 68, 68, 0.1);
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .status-text {
-            font-size: 2rem;
-            font-weight: 700;
+        .score-main {
+            text-align: center;
             margin-bottom: 1rem;
         }
 
-        .status-text.waiting {
-            color: #FBB936;
-        }
-
-        .status-text.ready {
-            color: #10B981;
-            font-size: 3rem;
-        }
-
-        .status-text.early {
-            color: #EF4444;
+        .score-label {
+            font-size: 0.875rem;
+            color: #94A3B8;
+            margin-bottom: 0.5rem;
         }
 
         .reaction-time {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 4rem;
+            font-size: 3rem;
             color: #06B6D4;
-            margin: 1rem 0;
             text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            line-height: 1;
         }
 
         .unit {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: #94A3B8;
-            margin-left: 0.5rem;
+            margin-left: 0.25rem;
         }
 
-        .stats {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
+        .rating {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(6, 182, 212, 0.2);
         }
 
         .stat-item {
-            background: rgba(15, 23, 42, 0.5);
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            border: 1px solid rgba(6, 182, 212, 0.2);
+            text-align: center;
         }
 
         .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: #94A3B8;
             margin-bottom: 0.25rem;
         }
 
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: #F8FAFC;
+        }
+
+        #center-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .status-text {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #F8FAFC;
+            text-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.9),
+                0 0 40px rgba(0, 0, 0, 0.7),
+                0 4px 8px rgba(0, 0, 0, 0.8);
+            background: rgba(15, 23, 42, 0.7);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(248, 250, 252, 0.2);
+        }
+
+        .status-text.waiting {
+            color: #FBB936;
+            border-color: rgba(251, 191, 54, 0.4);
+            text-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.9),
+                0 0 40px rgba(251, 191, 54, 0.5);
+        }
+
+        .status-text.ready {
+            color: #10B981;
+            font-size: 4rem;
+            border-color: rgba(16, 185, 129, 0.6);
+            text-shadow: 
+                0 0 30px rgba(0, 0, 0, 0.9),
+                0 0 50px rgba(16, 185, 129, 0.8);
+            animation: pulse-text 0.5s ease-in-out infinite;
+        }
+
+        .status-text.early {
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.6);
+            text-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.9),
+                0 0 40px rgba(239, 68, 68, 0.6);
+            animation: shake-text 0.5s ease-in-out;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake-text {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .hint {
+            font-size: 1.125rem;
+            color: #94A3B8;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #bottom-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: auto;
         }
 
         button {
@@ -180,55 +234,59 @@
             font-weight: 600;
             border-radius: 0.75rem;
             cursor: pointer;
-            margin-top: 1.5rem;
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.4);
         }
 
         button:active {
             transform: translateY(0);
         }
 
-        .hint {
-            font-size: 0.875rem;
-            color: #64748B;
-            margin-top: 1rem;
-            font-style: italic;
-        }
+        @media (max-width: 768px) {
+            #top-bar {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem;
+            }
 
-        @media (max-width: 640px) {
+            .title-section {
+                text-align: center;
+            }
+
             h1 {
                 font-size: 2rem;
             }
 
             .instruction {
-                font-size: 1rem;
+                font-size: 0.875rem;
             }
 
-            #game-area {
-                padding: 2rem 1rem;
-                min-height: 250px;
-            }
-
-            .status-text {
-                font-size: 1.5rem;
-            }
-
-            .status-text.ready {
-                font-size: 2rem;
+            #score-panel {
+                padding: 1rem;
+                min-width: 160px;
             }
 
             .reaction-time {
-                font-size: 3rem;
+                font-size: 2rem;
             }
 
-            .stats {
-                gap: 1rem;
+            .status-text {
+                font-size: 2rem;
+            }
+
+            .status-text.ready {
+                font-size: 2.5rem;
+            }
+
+            #bottom-controls {
+                bottom: 1rem;
             }
         }
     </style>
@@ -237,29 +295,60 @@
     <div id="canvas-container"></div>
     
     <div id="ui-overlay">
-        <h1>⚡ Reaction Timer</h1>
-        <p class="instruction">Test your reaction speed with an immersive 3D experience</p>
-        
-        <div id="game-area">
-            <div id="content">
-                <div class="status-text">Click to Start</div>
-                <p class="hint">Click anywhere when the signal appears</p>
+        <div id="top-bar">
+            <div class="title-section">
+                <h1>⚡ Reaction Timer</h1>
+                <p class="instruction">Click when you see the signal</p>
+            </div>
+            <div id="score-panel">
+                <div class="score-main">
+                    <div class="score-label">Your Time</div>
+                    <div class="reaction-time">
+                        <span id="score-value">--</span><span class="unit">ms</span>
+                    </div>
+                    <div class="rating" id="rating-text"></div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Best</div>
+                        <div class="stat-value" id="best-value">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Avg</div>
+                        <div class="stat-value" id="avg-value">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Tries</div>
+                        <div class="stat-value" id="tries-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Success</div>
+                        <div class="stat-value" id="success-value">0</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <button id="reset-btn" style="display: none;">Play Again</button>
+        <div id="center-message">
+            <div class="status-text" id="status-text">Click to Start</div>
+            <p class="hint" id="hint-text">Wait for the green signal</p>
+        </div>
+
+        <div id="bottom-controls">
+            <button id="reset-btn" style="display: none;">Play Again</button>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // ===== GAME STATE MANAGEMENT =====
-        // Centralized state management for clean architecture
         const GameState = {
-            current: 'idle', // idle, waiting, ready, early, result
+            current: 'idle',
             startTime: null,
             reactionTime: null,
             timeoutId: null,
             attempts: 0,
+            successfulAttempts: 0,
             totalTime: 0,
             bestTime: null,
 
@@ -272,14 +361,19 @@
             recordReaction(time) {
                 this.reactionTime = time;
                 this.attempts++;
+                this.successfulAttempts++;
                 this.totalTime += time;
                 if (this.bestTime === null || time < this.bestTime) {
                     this.bestTime = time;
                 }
             },
 
+            recordEarlyClick() {
+                this.attempts++;
+            },
+
             getAverageTime() {
-                return this.attempts > 0 ? Math.round(this.totalTime / this.attempts) : 0;
+                return this.successfulAttempts > 0 ? Math.round(this.totalTime / this.successfulAttempts) : 0;
             },
 
             reset() {
@@ -293,175 +387,212 @@
         };
 
         // ===== THREE.JS SCENE MANAGEMENT =====
-        // Handles all 3D graphics and animations
         const SceneManager = {
             scene: null,
             camera: null,
             renderer: null,
-            shapes: [],
+            mainShape: null,
+            orbitingShapes: [],
             particles: [],
             lights: {},
             animationId: null,
 
             init() {
-                // Setup scene
                 this.scene = new THREE.Scene();
-                this.scene.fog = new THREE.Fog(0x0F172A, 10, 50);
+                this.scene.fog = new THREE.Fog(0x0F172A, 20, 60);
 
-                // Setup camera with slight perspective
                 this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                this.camera.position.z = 15;
+                this.camera.position.z = 20;
 
-                // Setup renderer with alpha for transparency
                 this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                this.renderer.setClearColor(0x0F172A, 0);
+                this.renderer.setClearColor(0x0F172A, 1);
                 document.getElementById('canvas-container').appendChild(this.renderer.domElement);
 
-                // Create ambient lighting
-                this.lights.ambient = new THREE.AmbientLight(0xffffff, 0.4);
+                // Lighting setup
+                this.lights.ambient = new THREE.AmbientLight(0xffffff, 0.3);
                 this.scene.add(this.lights.ambient);
 
-                // Create dynamic point lights
-                this.lights.point1 = new THREE.PointLight(0x06B6D4, 1, 50);
-                this.lights.point1.position.set(10, 10, 10);
+                this.lights.point1 = new THREE.PointLight(0x06B6D4, 2, 100);
+                this.lights.point1.position.set(15, 15, 15);
                 this.scene.add(this.lights.point1);
 
-                this.lights.point2 = new THREE.PointLight(0x10B981, 0.8, 50);
-                this.lights.point2.position.set(-10, -10, 10);
+                this.lights.point2 = new THREE.PointLight(0x10B981, 1.5, 100);
+                this.lights.point2.position.set(-15, -15, 15);
                 this.scene.add(this.lights.point2);
 
-                // Create 3D shapes for idle state
-                this.createIdleShapes();
+                this.lights.point3 = new THREE.PointLight(0x8B5CF6, 1, 100);
+                this.lights.point3.position.set(0, 0, 25);
+                this.scene.add(this.lights.point3);
 
-                // Handle window resize
+                this.createIdleShape();
+
                 window.addEventListener('resize', () => this.onResize());
-
-                // Start animation loop
                 this.animate();
             },
 
-            createIdleShapes() {
+            createIdleShape() {
                 // Clear existing shapes
-                this.shapes.forEach(shape => this.scene.remove(shape));
-                this.shapes = [];
+                if (this.mainShape) this.scene.remove(this.mainShape);
+                this.orbitingShapes.forEach(shape => this.scene.remove(shape));
+                this.orbitingShapes = [];
 
-                // Create floating geometric shapes
-                const geometries = [
-                    new THREE.IcosahedronGeometry(1.5, 0),
-                    new THREE.OctahedronGeometry(1.5, 0),
-                    new THREE.TorusGeometry(1, 0.4, 16, 100)
-                ];
-
-                const positions = [
-                    { x: -4, y: 2, z: 0 },
-                    { x: 4, y: -2, z: -2 },
-                    { x: 0, y: 0, z: -4 }
-                ];
-
-                geometries.forEach((geometry, i) => {
-                    const material = new THREE.MeshPhongMaterial({
-                        color: 0x06B6D4,
-                        shininess: 100,
-                        transparent: true,
-                        opacity: 0.6,
-                        wireframe: false
-                    });
-
-                    const mesh = new THREE.Mesh(geometry, material);
-                    mesh.position.set(positions[i].x, positions[i].y, positions[i].z);
-                    mesh.userData.rotationSpeed = { x: 0.005, y: 0.01, z: 0.005 };
-                    mesh.userData.floatSpeed = 0.5 + Math.random() * 0.5;
-                    mesh.userData.floatOffset = Math.random() * Math.PI * 2;
-                    
-                    this.shapes.push(mesh);
-                    this.scene.add(mesh);
+                // Create main central dodecahedron with wireframe overlay
+                const mainGeo = new THREE.DodecahedronGeometry(4, 0);
+                const mainMat = new THREE.MeshPhongMaterial({
+                    color: 0x1E293B,
+                    emissive: 0x06B6D4,
+                    emissiveIntensity: 0.2,
+                    shininess: 100,
+                    transparent: true,
+                    opacity: 0.8
                 });
+                this.mainShape = new THREE.Mesh(mainGeo, mainMat);
+                
+                // Add wireframe overlay
+                const wireGeo = new THREE.EdgesGeometry(mainGeo);
+                const wireMat = new THREE.LineBasicMaterial({ color: 0x06B6D4, transparent: true, opacity: 0.6 });
+                const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+                this.mainShape.add(wireframe);
+                
+                this.mainShape.userData.baseRotation = { x: 0.003, y: 0.005, z: 0.002 };
+                this.scene.add(this.mainShape);
+
+                // Create orbiting smaller shapes
+                const orbitCount = 8;
+                for (let i = 0; i < orbitCount; i++) {
+                    const geo = new THREE.OctahedronGeometry(0.6, 0);
+                    const mat = new THREE.MeshPhongMaterial({
+                        color: 0x06B6D4,
+                        emissive: 0x06B6D4,
+                        emissiveIntensity: 0.3,
+                        transparent: true,
+                        opacity: 0.7
+                    });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    
+                    const angle = (i / orbitCount) * Math.PI * 2;
+                    const radius = 8;
+                    mesh.position.set(
+                        Math.cos(angle) * radius,
+                        Math.sin(angle * 1.3) * 3,
+                        Math.sin(angle) * radius
+                    );
+                    
+                    mesh.userData.orbitAngle = angle;
+                    mesh.userData.orbitSpeed = 0.01;
+                    mesh.userData.orbitRadius = radius;
+                    
+                    this.orbitingShapes.push(mesh);
+                    this.scene.add(mesh);
+                }
             },
 
-            createReadySignal() {
+            createReadyShape() {
                 // Clear existing shapes
-                this.shapes.forEach(shape => this.scene.remove(shape));
-                this.shapes = [];
+                if (this.mainShape) this.scene.remove(this.mainShape);
+                this.orbitingShapes.forEach(shape => this.scene.remove(shape));
+                this.orbitingShapes = [];
+                this.particles.forEach(p => this.scene.remove(p));
+                this.particles = [];
 
-                // Create large central sphere that pulses
-                const geometry = new THREE.SphereGeometry(3, 32, 32);
-                const material = new THREE.MeshPhongMaterial({
+                // Create complex compound shape with multiple layers
+                const group = new THREE.Group();
+
+                // Inner spinning icosahedron
+                const innerGeo = new THREE.IcosahedronGeometry(3, 1);
+                const innerMat = new THREE.MeshPhongMaterial({
                     color: 0x10B981,
                     emissive: 0x10B981,
-                    emissiveIntensity: 0.5,
+                    emissiveIntensity: 0.8,
                     shininess: 100,
                     transparent: true,
                     opacity: 0
                 });
+                const inner = new THREE.Mesh(innerGeo, innerMat);
+                inner.userData.spinSpeed = { x: 0.02, y: 0.03, z: 0.01 };
+                inner.userData.targetOpacity = 0.9;
+                group.add(inner);
 
-                const sphere = new THREE.Mesh(geometry, material);
-                sphere.userData.targetOpacity = 1;
-                sphere.userData.pulseSpeed = 2;
-                
-                this.shapes.push(sphere);
-                this.scene.add(sphere);
+                // Wireframe sphere
+                const sphereGeo = new THREE.SphereGeometry(5, 32, 32);
+                const wireGeo = new THREE.WireframeGeometry(sphereGeo);
+                const wireMat = new THREE.LineBasicMaterial({ 
+                    color: 0x10B981,
+                    transparent: true,
+                    opacity: 0
+                });
+                const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+                wireframe.userData.targetOpacity = 0.4;
+                group.add(wireframe);
 
-                // Create particle burst effect
-                this.createParticles();
+                // Outer rotating ring
+                const ringGeo = new THREE.TorusGeometry(6, 0.3, 16, 100);
+                const ringMat = new THREE.MeshPhongMaterial({
+                    color: 0x10B981,
+                    emissive: 0x10B981,
+                    emissiveIntensity: 0.5,
+                    transparent: true,
+                    opacity: 0
+                });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.PI / 2;
+                ring.userData.rotSpeed = 0.05;
+                ring.userData.targetOpacity = 0.8;
+                group.add(ring);
 
-                // Animate lights to green
-                this.animateLightColor(this.lights.point1, 0x10B981);
-                this.animateLightColor(this.lights.point2, 0x10B981);
+                group.userData.children = { inner, wireframe, ring };
+                group.userData.pulseSpeed = 3;
+
+                this.mainShape = group;
+                this.scene.add(group);
+
+                // Create expanding particle ring
+                this.createParticleRing();
             },
 
-            createParticles() {
-                // Clear existing particles
-                this.particles.forEach(particle => this.scene.remove(particle));
-                this.particles = [];
-
-                // Create particle system for burst effect
-                const particleCount = 50;
+            createParticleRing() {
+                const particleCount = 100;
                 const geometry = new THREE.BufferGeometry();
                 const positions = [];
+                const colors = [];
 
                 for (let i = 0; i < particleCount; i++) {
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.random() * Math.PI;
-                    const radius = 2;
-
+                    const angle = (i / particleCount) * Math.PI * 2;
+                    const radius = 4;
+                    
                     positions.push(
-                        radius * Math.sin(phi) * Math.cos(theta),
-                        radius * Math.sin(phi) * Math.sin(theta),
-                        radius * Math.cos(phi)
+                        Math.cos(angle) * radius,
+                        0,
+                        Math.sin(angle) * radius
                     );
+
+                    colors.push(0.06, 0.71, 0.83); // Cyan color
                 }
 
                 geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
                 const material = new THREE.PointsMaterial({
-                    color: 0x10B981,
-                    size: 0.2,
+                    size: 0.3,
+                    vertexColors: true,
                     transparent: true,
-                    opacity: 1
+                    opacity: 1,
+                    blending: THREE.AdditiveBlending
                 });
 
                 const particles = new THREE.Points(geometry, material);
-                particles.userData.velocities = [];
-                
-                for (let i = 0; i < particleCount; i++) {
-                    particles.userData.velocities.push({
-                        x: (Math.random() - 0.5) * 0.2,
-                        y: (Math.random() - 0.5) * 0.2,
-                        z: (Math.random() - 0.5) * 0.2
-                    });
-                }
+                particles.userData.expanding = true;
+                particles.userData.expansionSpeed = 0.1;
 
                 this.particles.push(particles);
                 this.scene.add(particles);
             },
 
-            animateLightColor(light, targetColor) {
-                // Smooth color transition for lights
+            animateLightColor(light, targetColor, duration = 500) {
                 const startColor = light.color.clone();
                 const endColor = new THREE.Color(targetColor);
-                const duration = 500;
                 const startTime = Date.now();
 
                 const animate = () => {
@@ -481,20 +612,26 @@
             updateForState(state) {
                 switch (state) {
                     case 'idle':
-                        this.createIdleShapes();
+                        this.createIdleShape();
                         this.animateLightColor(this.lights.point1, 0x06B6D4);
                         this.animateLightColor(this.lights.point2, 0x10B981);
+                        this.animateLightColor(this.lights.point3, 0x8B5CF6);
                         break;
                     case 'waiting':
                         this.animateLightColor(this.lights.point1, 0xFBB936);
                         this.animateLightColor(this.lights.point2, 0xFBB936);
+                        this.animateLightColor(this.lights.point3, 0xFBB936);
                         break;
                     case 'ready':
-                        this.createReadySignal();
+                        this.createReadyShape();
+                        this.animateLightColor(this.lights.point1, 0x10B981);
+                        this.animateLightColor(this.lights.point2, 0x10B981);
+                        this.animateLightColor(this.lights.point3, 0x10B981);
                         break;
                     case 'early':
                         this.animateLightColor(this.lights.point1, 0xEF4444);
                         this.animateLightColor(this.lights.point2, 0xEF4444);
+                        this.animateLightColor(this.lights.point3, 0xEF4444);
                         break;
                 }
             },
@@ -504,49 +641,85 @@
 
                 const time = Date.now() * 0.001;
 
-                // Animate shapes based on current state
-                this.shapes.forEach((shape, index) => {
-                    // Rotation
-                    if (shape.userData.rotationSpeed) {
-                        shape.rotation.x += shape.userData.rotationSpeed.x;
-                        shape.rotation.y += shape.userData.rotationSpeed.y;
-                        shape.rotation.z += shape.userData.rotationSpeed.z;
-                    }
+                // Animate main shape
+                if (this.mainShape) {
+                    if (GameState.current === 'idle' || GameState.current === 'waiting') {
+                        // Gentle rotation for idle state
+                        const rot = this.mainShape.userData.baseRotation;
+                        if (rot) {
+                            this.mainShape.rotation.x += rot.x;
+                            this.mainShape.rotation.y += rot.y;
+                            this.mainShape.rotation.z += rot.z;
+                        }
+                    } else if (GameState.current === 'ready' && this.mainShape.userData.children) {
+                        // Complex animation for ready state
+                        const { inner, wireframe, ring } = this.mainShape.userData.children;
+                        
+                        // Fade in effect
+                        if (inner.material.opacity < inner.userData.targetOpacity) {
+                            inner.material.opacity += 0.05;
+                            wireframe.material.opacity += 0.02;
+                            ring.material.opacity += 0.04;
+                        }
 
-                    // Floating animation
-                    if (shape.userData.floatSpeed) {
-                        const offset = shape.userData.floatOffset || 0;
-                        shape.position.y += Math.sin(time * shape.userData.floatSpeed + offset) * 0.01;
-                    }
+                        // Spin inner shape
+                        inner.rotation.x += inner.userData.spinSpeed.x;
+                        inner.rotation.y += inner.userData.spinSpeed.y;
+                        inner.rotation.z += inner.userData.spinSpeed.z;
 
-                    // Fade in ready signal
-                    if (shape.userData.targetOpacity !== undefined && shape.material.opacity < shape.userData.targetOpacity) {
-                        shape.material.opacity = Math.min(shape.material.opacity + 0.05, shape.userData.targetOpacity);
-                    }
+                        // Rotate ring
+                        ring.rotation.z += ring.userData.rotSpeed;
 
-                    // Pulse effect for ready state
-                    if (shape.userData.pulseSpeed && GameState.current === 'ready') {
-                        const scale = 1 + Math.sin(time * shape.userData.pulseSpeed) * 0.1;
-                        shape.scale.set(scale, scale, scale);
+                        // Pulse effect
+                        const pulseScale = 1 + Math.sin(time * this.mainShape.userData.pulseSpeed) * 0.15;
+                        this.mainShape.scale.set(pulseScale, pulseScale, pulseScale);
+
+                        // Rotate wireframe slowly
+                        wireframe.rotation.y += 0.01;
                     }
+                }
+
+                // Animate orbiting shapes
+                this.orbitingShapes.forEach(shape => {
+                    shape.userData.orbitAngle += shape.userData.orbitSpeed;
+                    const angle = shape.userData.orbitAngle;
+                    const radius = shape.userData.orbitRadius;
+                    
+                    shape.position.x = Math.cos(angle) * radius;
+                    shape.position.y = Math.sin(angle * 1.3) * 3;
+                    shape.position.z = Math.sin(angle) * radius;
+                    
+                    shape.rotation.x += 0.02;
+                    shape.rotation.y += 0.03;
                 });
 
                 // Animate particles
                 this.particles.forEach(particleSystem => {
-                    if (particleSystem.userData.velocities) {
+                    if (particleSystem.userData.expanding) {
                         const positions = particleSystem.geometry.attributes.position.array;
-                        particleSystem.userData.velocities.forEach((vel, i) => {
-                            positions[i * 3] += vel.x;
-                            positions[i * 3 + 1] += vel.y;
-                            positions[i * 3 + 2] += vel.z;
-                        });
+                        const speed = particleSystem.userData.expansionSpeed;
+                        
+                        for (let i = 0; i < positions.length; i += 3) {
+                            const x = positions[i];
+                            const z = positions[i + 2];
+                            const angle = Math.atan2(z, x);
+                            
+                            positions[i] += Math.cos(angle) * speed;
+                            positions[i + 2] += Math.sin(angle) * speed;
+                        }
+                        
                         particleSystem.geometry.attributes.position.needsUpdate = true;
-                        particleSystem.material.opacity *= 0.98;
+                        particleSystem.material.opacity *= 0.97;
+                        
+                        if (particleSystem.material.opacity < 0.01) {
+                            particleSystem.userData.expanding = false;
+                        }
                     }
                 });
 
-                // Rotate camera slightly for depth
-                this.camera.position.x = Math.sin(time * 0.1) * 2;
+                // Gentle camera movement
+                this.camera.position.x = Math.sin(time * 0.2) * 3;
+                this.camera.position.y = Math.cos(time * 0.15) * 2;
                 this.camera.lookAt(this.scene.position);
 
                 this.renderer.render(this.scene, this.camera);
@@ -556,35 +729,27 @@
                 this.camera.aspect = window.innerWidth / window.innerHeight;
                 this.camera.updateProjectionMatrix();
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
-            },
-
-            destroy() {
-                if (this.animationId) {
-                    cancelAnimationFrame(this.animationId);
-                }
-                this.renderer.dispose();
             }
         };
 
         // ===== UI MANAGER =====
-        // Handles all UI updates based on game state
         const UIManager = {
             elements: {
-                gameArea: document.getElementById('game-area'),
-                content: document.getElementById('content'),
-                resetBtn: document.getElementById('reset-btn')
+                statusText: document.getElementById('status-text'),
+                hintText: document.getElementById('hint-text'),
+                resetBtn: document.getElementById('reset-btn'),
+                scorePanel: document.getElementById('score-panel'),
+                scoreValue: document.getElementById('score-value'),
+                ratingText: document.getElementById('rating-text'),
+                bestValue: document.getElementById('best-value'),
+                avgValue: document.getElementById('avg-value'),
+                triesValue: document.getElementById('tries-value'),
+                successValue: document.getElementById('success-value')
             },
 
             update() {
                 const state = GameState.current;
                 
-                // Update game area classes
-                this.elements.gameArea.className = '';
-                if (state === 'waiting') this.elements.gameArea.classList.add('waiting');
-                if (state === 'ready') this.elements.gameArea.classList.add('ready');
-                if (state === 'early') this.elements.gameArea.classList.add('early');
-
-                // Update content based on state
                 switch (state) {
                     case 'idle':
                         this.showIdle();
@@ -602,45 +767,44 @@
                         this.showResult();
                         break;
                 }
+
+                this.updateStats();
             },
 
             showIdle() {
-                this.elements.content.innerHTML = `
-                    <div class="status-text">Click to Start</div>
-                    <p class="hint">Click anywhere when the signal appears</p>
-                `;
+                this.elements.statusText.textContent = 'Click to Start';
+                this.elements.statusText.className = 'status-text';
+                this.elements.hintText.textContent = 'Wait for the green signal';
+                this.elements.hintText.style.display = 'block';
                 this.elements.resetBtn.style.display = 'none';
             },
 
             showWaiting() {
-                this.elements.content.innerHTML = `
-                    <div class="status-text waiting">Wait for it...</div>
-                    <p class="hint">Don't click yet!</p>
-                `;
+                this.elements.statusText.textContent = 'Wait...';
+                this.elements.statusText.className = 'status-text waiting';
+                this.elements.hintText.textContent = "Don't click yet!";
+                this.elements.hintText.style.display = 'block';
                 this.elements.resetBtn.style.display = 'none';
             },
 
             showReady() {
-                this.elements.content.innerHTML = `
-                    <div class="status-text ready">CLICK NOW!</div>
-                `;
+                this.elements.statusText.textContent = 'GO!';
+                this.elements.statusText.className = 'status-text ready';
+                this.elements.hintText.style.display = 'none';
                 this.elements.resetBtn.style.display = 'none';
             },
 
             showEarly() {
-                this.elements.content.innerHTML = `
-                    <div class="status-text early">Too Early!</div>
-                    <p class="hint">Wait for the green signal</p>
-                `;
+                this.elements.statusText.textContent = 'Too Early!';
+                this.elements.statusText.className = 'status-text early';
+                this.elements.hintText.textContent = 'Wait for green!';
+                this.elements.hintText.style.display = 'block';
                 this.elements.resetBtn.style.display = 'block';
             },
 
             showResult() {
                 const time = GameState.reactionTime;
-                const avg = GameState.getAverageTime();
-                const best = GameState.bestTime;
-
-                // Rating system for feedback
+                
                 let rating = '';
                 let ratingColor = '';
                 if (time < 200) {
@@ -653,58 +817,53 @@
                     rating = 'Good! 👍';
                     ratingColor = '#10B981';
                 } else {
-                    rating = 'Keep practicing! 💪';
+                    rating = 'Keep trying! 💪';
                     ratingColor = '#FBB936';
                 }
 
-                this.elements.content.innerHTML = `
-                    <div style="color: ${ratingColor}; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
-                        ${rating}
-                    </div>
-                    <div class="reaction-time">
-                        ${time}<span class="unit">ms</span>
-                    </div>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Average</div>
-                            <div class="stat-value">${avg}ms</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Best</div>
-                            <div class="stat-value">${best}ms</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Attempts</div>
-                            <div class="stat-value">${GameState.attempts}</div>
-                        </div>
-                    </div>
-                `;
+                this.elements.statusText.textContent = rating;
+                this.elements.statusText.className = 'status-text';
+                this.elements.statusText.style.color = ratingColor;
+                this.elements.hintText.style.display = 'none';
                 this.elements.resetBtn.style.display = 'block';
+
+                // Update score panel
+                this.elements.scoreValue.textContent = time;
+                this.elements.ratingText.textContent = rating;
+                this.elements.ratingText.style.color = ratingColor;
+                this.elements.scorePanel.classList.add('visible');
+            },
+
+            updateStats() {
+                this.elements.triesValue.textContent = GameState.attempts;
+                this.elements.successValue.textContent = GameState.successfulAttempts;
+                
+                if (GameState.bestTime !== null) {
+                    this.elements.bestValue.textContent = GameState.bestTime + 'ms';
+                }
+                
+                const avg = GameState.getAverageTime();
+                if (avg > 0) {
+                    this.elements.avgValue.textContent = avg + 'ms';
+                }
             }
         };
 
         // ===== GAME CONTROLLER =====
-        // Manages game logic and user interactions
         const GameController = {
             init() {
-                // Initialize Three.js scene
                 SceneManager.init();
 
-                // Setup event listeners
-                this.elements.gameArea.addEventListener('click', () => this.handleClick());
-                this.elements.resetBtn.addEventListener('click', () => this.startGame());
+                document.getElementById('canvas-container').addEventListener('click', () => this.handleClick());
+                UIManager.elements.resetBtn.addEventListener('click', () => this.startGame());
 
-                // Initial UI state
                 UIManager.update();
             },
-
-            elements: UIManager.elements,
 
             startGame() {
                 GameState.reset();
                 GameState.setState('waiting');
 
-                // Random delay between 1-5 seconds to prevent pattern memorization
                 const delay = 1000 + Math.random() * 4000;
                 
                 GameState.timeoutId = setTimeout(() => {
@@ -722,13 +881,12 @@
                         break;
                     
                     case 'waiting':
-                        // Penalize early clicks
                         GameState.reset();
+                        GameState.recordEarlyClick();
                         GameState.setState('early');
                         break;
                     
                     case 'ready':
-                        // Calculate reaction time with high precision
                         const reactionTime = Math.round(performance.now() - GameState.startTime);
                         GameState.recordReaction(reactionTime);
                         GameState.setState('result');
@@ -736,14 +894,13 @@
                     
                     case 'early':
                     case 'result':
-                        // These states are handled by reset button
+                        // Handled by reset button
                         break;
                 }
             }
         };
 
         // ===== INITIALIZATION =====
-        // Start the application when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => GameController.init());
         } else {
